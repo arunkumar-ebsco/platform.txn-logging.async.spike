@@ -19,9 +19,4 @@ dependencies {
     compile group: 'com.amazonaws', name: 'amazon-kinesis-client', version: '1.7.5'
 
 
-
-
-
-
-
 }
