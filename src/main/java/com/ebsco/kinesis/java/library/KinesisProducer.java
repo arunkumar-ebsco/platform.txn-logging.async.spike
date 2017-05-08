@@ -25,7 +25,7 @@ public class KinesisProducer implements Runnable {
 
     private final String STREAM_NAME = "kpl_test_stream";
 
-    protected final static String REGION = "us-east-1";
+    private final static String REGION = "us-east-1";
 
     protected final BlockingQueue<TransactionLogging> txnLoggingQueue;
 
