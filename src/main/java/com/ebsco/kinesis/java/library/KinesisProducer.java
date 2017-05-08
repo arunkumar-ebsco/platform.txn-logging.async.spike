@@ -8,6 +8,7 @@ import com.amazonaws.services.kinesis.producer.UserRecordResult;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +92,7 @@ public class KinesisProducer implements Runnable {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(ExceptionUtils.getFullStackTrace(e));
         }
 
     }

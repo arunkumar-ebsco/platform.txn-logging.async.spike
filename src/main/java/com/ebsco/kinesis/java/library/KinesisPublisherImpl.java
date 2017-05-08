@@ -34,8 +34,10 @@ public class KinesisPublisherImpl implements KinesisPublisher{
     protected static Boolean validate(TransactionLogging transactionLogging) throws Exception{
         if(null != transactionLogging && null != transactionLogging.getSessionId() && null != transactionLogging.getPayload()){
             return Boolean.TRUE;
+        } else {
+            LOG.error(transactionLogging.toString()+" is not validated successfully ...");
+            return Boolean.FALSE;
         }
-        return Boolean.FALSE;
     }
 
 }
