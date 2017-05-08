@@ -16,7 +16,7 @@ public class Client {
     public static void main(String[] args) {
         KinesisPublisher kinesisPublisher = new KinesisPublisherImpl();
         for (int i=0;i<=2;i++) {
-            kinesisPublisher.sendToKinesis(new TransactionLogging("sample", "sample"));
+            kinesisPublisher.sendToKinesis(new TransactionLogging(String.valueOf(i), "txnLogging"));
         }
         LOG.info("Client task done ...");
         }

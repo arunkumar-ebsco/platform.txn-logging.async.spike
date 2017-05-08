@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by aganapathy on 5/4/17. This class uses amazon kinesis producer
@@ -24,13 +25,15 @@ public class KinesisProducer implements Runnable {
 
     final static Logger LOG = LoggerFactory.getLogger(KinesisProducer.class);
 
-    private final String STREAM_NAME = "kpl_test_stream";
+    private final String STREAM_NAME = "kinesis_e2e_test";
 
     private final static String REGION = "us-east-1";
 
     protected final BlockingQueue<TransactionLogging> txnLoggingQueue;
 
     private final com.amazonaws.services.kinesis.producer.KinesisProducer kinesis;
+
+    protected final AtomicLong recordsPut = new AtomicLong(0);
 
     /**
      * Constructor to instantiate the class with KinesisProducerConfiguration
@@ -64,12 +67,13 @@ public class KinesisProducer implements Runnable {
                     ListenableFuture<UserRecordResult> f = kinesis.addUserRecord(STREAM_NAME, partitionKey, data);
                     while (kinesis.getOutstandingRecordsCount() >= 3) {
                         kinesis.flush();
+                        recordsPut.getAndIncrement();
                     }
 
                     Futures.addCallback(f, new FutureCallback<UserRecordResult>() {
                         @Override
                         public void onSuccess(UserRecordResult result) {
-
+                            LOG.info("recordsPut.getAndIncrement() --> "+recordsPut.getAndIncrement());
                             LOG.info((String.format("Succesfully put record, sequenceNumber=%s, " + "shardId=%s",
                                     result.getSequenceNumber(), result.getShardId())));
 
