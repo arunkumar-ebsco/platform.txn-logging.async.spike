@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Created by aganapathy on 5/1/17.
- * This is client stub code to test whether the messages are sent to Kinesis
+ * This is client stub code that creates TxnLogging messages to kinesis.
  */
 public class Client {
 
@@ -16,7 +16,7 @@ public class Client {
     public static void main(String[] args) {
         KinesisPublisher kinesisPublisher = new KinesisPublisherImpl();
         for (int i=0;i<=2;i++) {
-            kinesisPublisher.sendToKinesis(new TransactionLogging(String.valueOf(i), "txnLogging"));
+            kinesisPublisher.sendToKinesis(new TransactionLogging(String.valueOf(i), +i+" Sample Payload"));
         }
         LOG.info("Client task done ...");
         }
