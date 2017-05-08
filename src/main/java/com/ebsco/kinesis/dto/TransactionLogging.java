@@ -1,4 +1,4 @@
-package com.ebsco.kinesis.java.library;
+package com.ebsco.kinesis.dto;
 
 /**
  * Created by aganapathy on 5/7/17.

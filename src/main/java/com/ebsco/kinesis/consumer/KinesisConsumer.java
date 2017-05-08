@@ -1,3 +1,5 @@
+package com.ebsco.kinesis.consumer;
+
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
@@ -9,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-public class TxnReadDataKinesis {
+public class KinesisConsumer {
 
     private static final String APPLICATION_NAME = "NewTable";
     private static final String STREAM_NAME = "kinesis_e2e_test";

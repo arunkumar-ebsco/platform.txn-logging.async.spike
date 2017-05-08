@@ -1,5 +1,6 @@
-package com.ebsco.kinesis.java.library;
+package com.ebsco.kinesis.producer;
 
+import com.ebsco.kinesis.dto.TransactionLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

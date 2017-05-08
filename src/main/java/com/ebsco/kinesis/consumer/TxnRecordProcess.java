@@ -1,3 +1,5 @@
+package com.ebsco.kinesis.consumer;
+
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.KinesisClientLibDependencyException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
@@ -11,19 +13,22 @@ import com.amazonaws.services.kinesis.clientlibrary.types.InitializationInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ProcessRecordsInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownInput;
 import com.amazonaws.services.kinesis.model.Record;
+import com.google.common.collect.Lists;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TxnRecordProcess implements IRecordProcessor {
+
+    final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TxnRecordProcess.class);
+
 
     private final static CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder();
     private static final long BACKOFF_TIME_IN_MILLIS = 3000;
     private static final int NUM_RETRIES = 5;
-    private final static Logger LOGGER = Logger.getLogger(TxnRecordProcess.class.getName());
+    protected static final List<String> readRecordList = Lists.newArrayList();
 
     @Override
     public void initialize(InitializationInput initializationInput) {
@@ -42,7 +47,8 @@ public class TxnRecordProcess implements IRecordProcessor {
                     String data;
                     try {
                         data = decoder.decode(record.getData()).toString();
-                        System.out.println(data);
+                        LOGGER.info(data);
+                        readRecordList.add(data);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -56,6 +62,7 @@ public class TxnRecordProcess implements IRecordProcessor {
                 }
 
             }
+
         } catch (KinesisClientLibDependencyException | ThrottlingException e) {
             e.printStackTrace();
         }
@@ -76,21 +83,21 @@ public class TxnRecordProcess implements IRecordProcessor {
                 checkpointer.checkpoint();
                 break;
             } catch (ShutdownException | InvalidStateException e) {
-                LOGGER.log(Level.INFO, "skipping checkpoint.", e);
+                LOGGER.info("skipping checkpoint.", e);
                 break;
             } catch (ThrottlingException e) {
                 if (i >= (NUM_RETRIES - 1)) {
-                    LOGGER.log(Level.FINER, "Checkpoint failed after " + (i + 1) + "attempts.", e);
+                    LOGGER.info("Checkpoint failed after " + (i + 1) + "attempts.", e);
                     break;
                 } else {
-                    LOGGER.log(Level.INFO, "Transient issue when checkpointing - attempt " + (i + 1) + " of "
+                    LOGGER.info("Transient issue when checkpointing - attempt " + (i + 1) + " of "
                             + NUM_RETRIES);
                 }
             }
             try {
                 Thread.sleep(BACKOFF_TIME_IN_MILLIS);
             } catch (InterruptedException e) {
-                LOGGER.log(Level.INFO, "Interrupted sleep", e);
+                LOGGER.info("Interrupted sleep", e);
             }
 
         }

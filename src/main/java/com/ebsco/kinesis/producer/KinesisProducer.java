@@ -1,10 +1,11 @@
-package com.ebsco.kinesis.java.library;
+package com.ebsco.kinesis.producer;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.kinesis.producer.KinesisProducerConfiguration;
 import com.amazonaws.services.kinesis.producer.UserRecordFailedException;
 import com.amazonaws.services.kinesis.producer.UserRecordResult;
+import com.ebsco.kinesis.dto.TransactionLogging;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -62,18 +63,16 @@ public class KinesisProducer implements Runnable {
                 TransactionLogging transactionLogging = txnLoggingQueue.take();
                 if (KinesisPublisherImpl.validate(transactionLogging)) {
                     String partitionKey = transactionLogging.getSessionId();
-                    String payload = transactionLogging.getPayload();
-                    ByteBuffer data = ByteBuffer.wrap(payload.getBytes("UTF-8"));
+                    String txnData = transactionLogging.toString();
+                    ByteBuffer data = ByteBuffer.wrap(txnData.getBytes("UTF-8"));
                     ListenableFuture<UserRecordResult> f = kinesis.addUserRecord(STREAM_NAME, partitionKey, data);
-                    while (kinesis.getOutstandingRecordsCount() >= 3) {
-                        kinesis.flush();
-                        recordsPut.getAndIncrement();
-                    }
+                    kinesis.flush();
+                    recordsPut.getAndIncrement();
+
 
                     Futures.addCallback(f, new FutureCallback<UserRecordResult>() {
                         @Override
                         public void onSuccess(UserRecordResult result) {
-                            LOG.info("recordsPut.getAndIncrement() --> "+recordsPut.getAndIncrement());
                             LOG.info((String.format("Succesfully put record, sequenceNumber=%s, " + "shardId=%s",
                                     result.getSequenceNumber(), result.getShardId())));
 
@@ -86,7 +85,7 @@ public class KinesisProducer implements Runnable {
 
                                 e.printStackTrace();
                                 LOG.info(String.format("Record failed to put, partitionKey=%s, " + "payload=%s",
-                                        partitionKey, payload));
+                                        partitionKey, txnData));
                             }
                         }
 

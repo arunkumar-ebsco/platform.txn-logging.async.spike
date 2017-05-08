@@ -1,6 +1,6 @@
-import com.ebsco.kinesis.java.library.KinesisPublisher;
-import com.ebsco.kinesis.java.library.KinesisPublisherImpl;
-import com.ebsco.kinesis.java.library.TransactionLogging;
+import com.ebsco.kinesis.producer.KinesisPublisher;
+import com.ebsco.kinesis.producer.KinesisPublisherImpl;
+import com.ebsco.kinesis.dto.TransactionLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
