@@ -68,8 +68,6 @@ public class KinesisProducer implements Runnable {
                     ListenableFuture<UserRecordResult> f = kinesis.addUserRecord(STREAM_NAME, partitionKey, data);
                     kinesis.flush();
                     recordsPut.getAndIncrement();
-
-
                     Futures.addCallback(f, new FutureCallback<UserRecordResult>() {
                         @Override
                         public void onSuccess(UserRecordResult result) {
