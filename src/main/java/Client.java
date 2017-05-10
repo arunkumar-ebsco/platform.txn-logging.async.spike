@@ -1,5 +1,5 @@
-import com.ebsco.kinesis.producer.KinesisPublisher;
-import com.ebsco.kinesis.producer.KinesisPublisherImpl;
+import com.ebsco.kinesis.producer.TransactionLogger;
+import com.ebsco.kinesis.producer.TransactionLoggerImpl;
 import com.ebsco.kinesis.dto.TransactionLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
  */
 public class Client {
 
-    final static Logger LOG = LoggerFactory.getLogger(KinesisPublisherImpl.class);
+    final static Logger LOG = LoggerFactory.getLogger(TransactionLoggerImpl.class);
 
 
     public static void main(String[] args) {
-        KinesisPublisher kinesisPublisher = new KinesisPublisherImpl();
+        TransactionLogger transactionLogger = new TransactionLoggerImpl();
         for (int i=0;i<=2;i++) {
-            kinesisPublisher.sendToKinesis(new TransactionLogging(String.valueOf(i), +i+" Sample Payload"));
+            transactionLogger.log(new TransactionLogging(String.valueOf(i), +i+" Sample Payload"));
         }
         LOG.info("Client task done ...");
         }

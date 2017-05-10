@@ -61,7 +61,7 @@ public class KinesisProducer implements Runnable {
         try {
             while (txnLoggingQueue.size() >= 0) {
                 TransactionLogging transactionLogging = txnLoggingQueue.take();
-                if (KinesisPublisherImpl.validate(transactionLogging)) {
+                if (TransactionLoggerImpl.validate(transactionLogging)) {
                     String partitionKey = transactionLogging.getSessionId();
                     String txnData = transactionLogging.toString();
                     ByteBuffer data = ByteBuffer.wrap(txnData.getBytes("UTF-8"));

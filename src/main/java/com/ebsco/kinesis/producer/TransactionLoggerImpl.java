@@ -12,9 +12,9 @@ import java.util.concurrent.Executors;
 /**
  * Created by aganapathy on 5/7/17.
  */
-public class KinesisPublisherImpl implements KinesisPublisher{
+public class TransactionLoggerImpl implements TransactionLogger {
 
-    final static Logger LOG = LoggerFactory.getLogger(KinesisPublisherImpl.class);
+    final static Logger LOG = LoggerFactory.getLogger(TransactionLoggerImpl.class);
 
 
     protected static final BlockingQueue<TransactionLogging> txnLoggingQueue = new ArrayBlockingQueue<>(25);;
@@ -26,7 +26,7 @@ public class KinesisPublisherImpl implements KinesisPublisher{
 
     }
 
-    @Override public void sendToKinesis(TransactionLogging transactionLogging) {
+    @Override public void log(TransactionLogging transactionLogging) {
         if(!txnLoggingQueue.offer(transactionLogging)){
             LOG.info(transactionLogging.toString()+" is not sent to kinesis...");
         }

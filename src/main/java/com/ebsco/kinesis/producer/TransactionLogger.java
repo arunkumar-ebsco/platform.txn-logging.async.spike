@@ -5,8 +5,8 @@ import com.ebsco.kinesis.dto.TransactionLogging;
 /**
  * Created by aganapathy on 5/7/17.
  */
-public interface KinesisPublisher {
+public interface TransactionLogger {
 
-    void sendToKinesis(TransactionLogging transactionLogging);
+    void log(TransactionLogging transactionLogging);
 
 }
