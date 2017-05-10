@@ -71,8 +71,8 @@ public class KinesisProducer implements Runnable {
                     Futures.addCallback(f, new FutureCallback<UserRecordResult>() {
                         @Override
                         public void onSuccess(UserRecordResult result) {
-                            LOG.info((String.format("Succesfully put record, sequenceNumber=%s, " + "shardId=%s",
-                                    result.getSequenceNumber(), result.getShardId())));
+                            LOG.info((String.format("Succesfully put record with data=%s, "+" sequenceNumber=%s, " + "shardId=%s",
+                                    txnData,result.getSequenceNumber(), result.getShardId())));
 
                         }
 

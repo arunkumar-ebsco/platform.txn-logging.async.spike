@@ -17,7 +17,7 @@ public class TransactionLoggerImpl implements TransactionLogger {
     final static Logger LOG = LoggerFactory.getLogger(TransactionLoggerImpl.class);
 
 
-    protected static final BlockingQueue<TransactionLogging> txnLoggingQueue = new ArrayBlockingQueue<>(25);;
+    protected static final BlockingQueue<TransactionLogging> txnLoggingQueue = new ArrayBlockingQueue<>(1);
 
     static {
         final ExecutorService exec = Executors.newCachedThreadPool();
@@ -26,9 +26,16 @@ public class TransactionLoggerImpl implements TransactionLogger {
 
     }
 
-    @Override public void log(TransactionLogging transactionLogging) {
+    @Override public void log(TransactionLogging transactionLogging){
+        LOG.info("txnLoggingQueue.remainingCapacity() ---> "+txnLoggingQueue.remainingCapacity());
         if(!txnLoggingQueue.offer(transactionLogging)){
-            LOG.info(transactionLogging.toString()+" is not sent to kinesis...");
+            LOG.info("System will attempt to log "+transactionLogging.toString()+" in 5 seconds");
+            try {
+                Thread.sleep(5000);
+                log(transactionLogging);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

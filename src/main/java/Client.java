@@ -18,7 +18,7 @@ public class Client {
         for (int i=0;i<=2;i++) {
             transactionLogger.log(new TransactionLogging(String.valueOf(i), +i+" Sample Payload"));
         }
-        LOG.info("Client task done ...");
+        //LOG.info("Client task done ...");
         }
 
 
